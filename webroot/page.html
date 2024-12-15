@@ -3,17 +3,36 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta charset="UTF-8" />
-    <title>Rush Hour Game</title>
+    <title>Drive Away Game</title>
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div class="game-container">
-        <h1>Rush Hour</h1>
+    <div id="menu-container" class="menu-container">
+        <h1>Drive Away</h1>
+        <div class="menu-buttons">
+            <button id="play-button">Play</button>
+            <button id="create-button">Create</button>
+            <button id="howto-button">How To Play</button>
+        </div>
+    </div>
+    <div id="game-container" class="game-container hidden">
+        <h1>Drive Away</h1>
         <div class="player-info">
             <span>Player: <span id="username">Guest</span></span>
             <span id="moves">Moves: 0</span>
         </div>
         <table id="board"></table>
+        <button id="back-to-menu" class="back-button">Back to Menu</button>
+    </div>
+    <div id="create-container" class="create-container hidden">
+        <h1>Create Level</h1>
+        <p>Coming soon...</p>
+        <button id="back-from-create" class="back-button">Back to Menu</button>
+    </div>
+    <div id="howto-container" class="howto-container hidden">
+        <h1>How To Play</h1>
+        <p>Coming soon...</p>
+        <button id="back-from-howto" class="back-button">Back to Menu</button>
     </div>
     <script type="module" src="rushhour.js"></script>
     <script type="application/javascript" src="script.js"></script>

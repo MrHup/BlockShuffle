@@ -13,7 +13,7 @@ interface Message {
 }
 
 Devvit.addCustomPostType({
-  name: 'Rush Hour Game',
+  name: 'Garden Shuffle Game',
   height: 'tall',
   render: (context) => {
       const [messageStatus] = useState(async () => {
