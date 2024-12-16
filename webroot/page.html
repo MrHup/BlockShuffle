@@ -23,7 +23,19 @@
     </div>
     <div id="create-container" class="create-container hidden">
         <h1>Create Level</h1>
-        <p>Coming soon...</p>
+        <div class="car-selector">
+            <button class="car-select-btn" data-type="h2">🚗 2-Horizontal</button>
+            <button class="car-select-btn" data-type="h3">🚗 3-Horizontal</button>
+            <button class="car-select-btn" data-type="v2">🚙 2-Vertical</button>
+            <button class="car-select-btn" data-type="v3">🚙 3-Vertical</button>
+        </div>
+        <div class="create-grid-container">
+            <table id="create-board"></table>
+        </div>
+        <div class="create-controls">
+            <button id="clear-grid" class="control-btn">Clear Grid</button>
+            <button id="submit-grid" class="control-btn">Submit Grid</button>
+        </div>
         <button id="back-from-create" class="back-button">Back</button>
     </div>
     <div id="howto-container" class="howto-container hidden">

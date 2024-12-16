@@ -203,3 +203,65 @@ td {
   width: 40px;
   margin: 0 5px;
 }
+
+/* Grid creator */
+.create-container {
+  width: 400px;
+}
+
+.car-selector {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.car-select-btn {
+  padding: 8px 12px;
+  border: 2px solid var(--accent-color);
+  border-radius: var(--border-radius);
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.car-select-btn.selected {
+  background: var(--accent-color);
+  color: white;
+}
+
+.create-grid-container {
+  margin: 20px auto;
+  width: fit-content;
+}
+
+#create-board td {
+  width: 50px;
+  height: 50px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+#create-board td.highlight {
+  background-color: rgba(96, 165, 250, 0.2);
+}
+
+#create-board td.occupied {
+  background-color: var(--primary-color);
+}
+
+.create-controls {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.control-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: var(--border-radius);
+  background: var(--accent-color);
+  color: white;
+  cursor: pointer;
+}
