@@ -1,11 +1,34 @@
 class RushHour {
-  constructor(grid) {
+  constructor(grid, gameId = crypto.randomUUID()) {
+    this.gameId = gameId;
+    this.grid = grid;
     this.exitCarId = -1;
     this.grid = grid;
     this.cars = new Map();
     this.moves = 0;
     this.exitCarId = -1;
     this.initializeCars();
+  }
+
+  async saveScore(username, moves) {
+    const gameData = {
+      gameId: this.gameId,
+      map: this.grid,
+      score: {
+        username,
+        moves,
+        timestamp: Date.now(),
+      },
+    };
+
+    // Save to Redis using sorted set
+    await window.parent.postMessage(
+      {
+        type: "saveScore",
+        data: gameData,
+      },
+      "*"
+    );
   }
 
   initializeCars() {
@@ -72,6 +95,10 @@ class RushHour {
     this.moves++;
     // Check if game is won
     if (car.id === this.exitCarId && car.positions.some((p) => p.col === 5)) {
+      this.saveScore(
+        document.getElementById("username").textContent,
+        this.moves
+      );
       window.parent.postMessage(
         {
           type: "showWinMessage",
@@ -123,12 +150,24 @@ class RushHour {
   }
 }
 
+const initialGrid = [
+  [2, 1, 1, 1, 1, 0],
+  [2, 0, 0, 0, 0, 0],
+  [0, -1, -1, 0, 0, 4],
+  [5, 3, 3, 3, 3, 4],
+  [5, 0, 0, 0, 0, 0],
+  [5, 0, 0, 0, 0, 0],
+];
+
 class MenuManager {
   constructor() {
     this.menuContainer = document.getElementById("menu-container");
     this.gameContainer = document.getElementById("game-container");
     this.createContainer = document.getElementById("create-container");
     this.howtoContainer = document.getElementById("howto-container");
+    this.leaderboardContainer = document.getElementById(
+      "leaderboard-container"
+    );
 
     this.initializeListeners();
   }
@@ -153,6 +192,25 @@ class MenuManager {
     document
       .getElementById("back-from-howto")
       .addEventListener("click", () => this.showScreen("menu"));
+    document
+      .getElementById("leaderboard-button")
+      .addEventListener("click", () => this.showScreen("leaderboard"));
+    document
+      .getElementById("back-from-leaderboard")
+      .addEventListener("click", () => this.showScreen("menu"));
+  }
+
+  async showLeaderboard() {
+    const content = document.getElementById("leaderboard-content");
+    content.innerHTML = "Loading...";
+
+    window.parent.postMessage(
+      {
+        type: "getLeaderboard",
+        data: {},
+      },
+      "*"
+    );
   }
 
   showScreen(screen) {
@@ -160,6 +218,7 @@ class MenuManager {
     this.gameContainer.classList.add("hidden");
     this.createContainer.classList.add("hidden");
     this.howtoContainer.classList.add("hidden");
+    this.leaderboardContainer.classList.add("hidden");
 
     switch (screen) {
       case "menu":
@@ -179,19 +238,13 @@ class MenuManager {
       case "howto":
         this.howtoContainer.classList.remove("hidden");
         break;
+      case "leaderboard":
+        this.leaderboardContainer.classList.remove("hidden");
+        this.showLeaderboard();
+        break;
     }
   }
 }
 
 // Initialize menu system
 const menuManager = new MenuManager();
-
-// Initialize game when needed (moved to MenuManager's showScreen method)
-const initialGrid = [
-  [2, 1, 1, 1, 1, 0],
-  [2, 0, 0, 0, 0, 0],
-  [0, -1, -1, 0, 0, 4],
-  [5, 3, 3, 3, 3, 4],
-  [5, 0, 0, 0, 0, 0],
-  [5, 0, 0, 0, 0, 0],
-];

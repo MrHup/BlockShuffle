@@ -131,3 +131,22 @@ td {
   box-shadow: var(--shadow);
   text-align: center;
 }
+
+.leaderboard-container {
+  background: white;
+  padding: 20px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+}
+
+.leaderboard-entry {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid var(--background-color);
+}
+
+.leaderboard-entry:nth-child(even) {
+  background-color: var(--background-color);
+}
+
