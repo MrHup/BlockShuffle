@@ -162,7 +162,6 @@ const initialGrid = [
 class MenuManager {
   constructor() {
     this.menuContainer = document.getElementById("menu-container");
-    this.gameContainer = document.getElementById("game-container");
     this.createContainer = document.getElementById("create-container");
     this.howtoContainer = document.getElementById("howto-container");
     this.leaderboardContainer = document.getElementById(
@@ -170,34 +169,31 @@ class MenuManager {
     );
 
     this.initializeListeners();
+
+    // Initialize game immediately
+    window.gameInstance = new RushHour(initialGrid);
+    window.gameInstance.render();
   }
 
   initializeListeners() {
-    document
-      .getElementById("play-button")
-      .addEventListener("click", () => this.showScreen("game"));
     document
       .getElementById("create-button")
       .addEventListener("click", () => this.showScreen("create"));
     document
       .getElementById("howto-button")
       .addEventListener("click", () => this.showScreen("howto"));
-
-    document
-      .getElementById("back-to-menu")
-      .addEventListener("click", () => this.showScreen("menu"));
-    document
-      .getElementById("back-from-create")
-      .addEventListener("click", () => this.showScreen("menu"));
-    document
-      .getElementById("back-from-howto")
-      .addEventListener("click", () => this.showScreen("menu"));
     document
       .getElementById("leaderboard-button")
       .addEventListener("click", () => this.showScreen("leaderboard"));
     document
+      .getElementById("back-from-create")
+      .addEventListener("click", () => this.showScreen("main"));
+    document
+      .getElementById("back-from-howto")
+      .addEventListener("click", () => this.showScreen("main"));
+    document
       .getElementById("back-from-leaderboard")
-      .addEventListener("click", () => this.showScreen("menu"));
+      .addEventListener("click", () => this.showScreen("main"));
   }
 
   async showLeaderboard() {
@@ -214,23 +210,12 @@ class MenuManager {
   }
 
   showScreen(screen) {
-    this.menuContainer.classList.add("hidden");
-    this.gameContainer.classList.add("hidden");
     this.createContainer.classList.add("hidden");
     this.howtoContainer.classList.add("hidden");
     this.leaderboardContainer.classList.add("hidden");
 
     switch (screen) {
-      case "menu":
-        this.menuContainer.classList.remove("hidden");
-        break;
-      case "game":
-        this.gameContainer.classList.remove("hidden");
-        console.log("Initial grid:", initialGrid);
-        if (!window.gameInstance) {
-          window.gameInstance = new RushHour(initialGrid);
-          window.gameInstance.render();
-        }
+      case "main":
         break;
       case "create":
         this.createContainer.classList.remove("hidden");

@@ -12,7 +12,6 @@ Devvit.addMenuItem({
   location: 'subreddit',
   onPress: async (_event, context) => {
     const { reddit, ui } = context;
-    const randomId=crypto.randomUUID();
     const subreddit = await reddit.getCurrentSubreddit();
     const post = await reddit.submitPost({
       title: 'Drive away',
