@@ -392,6 +392,9 @@ class GridCreator {
       this.grid = Array(6)
         .fill()
         .map(() => Array(6).fill(0));
+
+      this.grid[2][1] = -1;
+      this.grid[2][2] = -1;
       this.nextCarId = 1;
       this.updateBoardDisplay();
     });

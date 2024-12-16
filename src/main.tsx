@@ -16,10 +16,10 @@ const App: Devvit.CustomPostComponent = ({ redis, postId, ui, reddit }) => {
   const [leaderboard, setLeaderboard] = useState(async () => {
     const results = await redis.zRange(`leaderboard:${postId}`, 0, 9,  { by: 'score' });
     
-    return results.map(entry => ({
-        member: entry.member,
-        score: entry.score
-    }));
+    return results.length > 0 ? results.map(entry => ({
+      member: entry.member,
+      score: entry.score
+    })) : [];
   });
 
   const addScore = async (gameData: any) => {
