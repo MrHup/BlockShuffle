@@ -3,10 +3,10 @@ class RushHour {
     this.gameId = gameId;
     this.grid = grid;
     this.exitCarId = -1;
-    this.grid = grid;
     this.cars = new Map();
     this.moves = 0;
     this.exitCarId = -1;
+    this.backupGrid = JSON.parse(JSON.stringify(grid));
     this.initializeCars();
   }
 
@@ -106,6 +106,17 @@ class RushHour {
         },
         "*"
       );
+
+      // Reset the game
+      this.grid = JSON.parse(JSON.stringify(this.backupGrid));
+      console.log("Game reset", this.grid);
+      this.cars = new Map();
+      this.moves = 0;
+      this.initializeCars();
+      this.render();
+
+      // Show leaderboard
+      menuManager.showScreen("leaderboard");
     }
   }
 
