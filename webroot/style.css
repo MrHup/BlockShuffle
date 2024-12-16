@@ -192,53 +192,14 @@ td {
   box-shadow: 0 2px 4px rgba(0,0,0,0.2);
   cursor: pointer;
   z-index: 2;
-  top: 10px;
-  left: 10px;
 }
 
-/* Wheels styling */
-/* .car::before, .car::after,
-.car .wheel-front, .car .wheel-back {
-  content: '';
-  position: absolute;
-  width: 8px;
-  height: 14px;
-  background: #333;
-  border-radius: 4px;
-} */
-
-/* .car[data-axis="horizontal"] {
-  height: 5px;
-  width: 40px;
+.car[data-axis="horizontal"] {
+  height: 40px;
   margin: 5px 0;
-}
-
-.car[data-axis="horizontal"]::before,
-.car[data-axis="horizontal"] .wheel-front {
-  left: 15%;
-  top: -6px;
-}
-
-.car[data-axis="horizontal"]::after,
-.car[data-axis="horizontal"] .wheel-back {
-  left: 15%;
-  bottom: -6px;
 }
 
 .car[data-axis="vertical"] {
   width: 40px;
   margin: 0 5px;
 }
-
-.car[data-axis="vertical"]::before,
-.car[data-axis="vertical"] .wheel-front {
-  top: 15%;
-  left: -6px;
-}
-
-.car[data-axis="vertical"]::after,
-.car[data-axis="vertical"] .wheel-back {
-  top: 15%;
-  right: -6px;
-}
- */

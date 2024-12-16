@@ -151,23 +151,28 @@ class RushHour {
       carElement.dataset.id = car.id;
 
       const length = car.positions.length * cellSize;
-      const top = car.positions[0].row * cellSize;
-      const left = car.positions[0].col * cellSize;
+      const top =
+        car.axis === "vertical"
+          ? car.positions[0].row * cellSize + 2 * car.positions[0].row + 10
+          : car.positions[0].row * cellSize + 2 * car.positions[0].row + 3;
+      const left =
+        car.axis === "horizontal"
+          ? car.positions[0].col * cellSize + 2 * car.positions[0].col + 10
+          : car.positions[0].col * cellSize + 3 * car.positions[0].col + 3;
+
+      console.log(left, top);
 
       carElement.style.width =
-        car.axis === "horizontal" ? `${length}px` : `${40}px`;
+        car.axis === "horizontal" ? `${length - 10}px` : `${40}px`;
       carElement.style.height =
-        car.axis === "vertical" ? `${length}px` : `${40}px`;
+        car.axis === "vertical" ? `${length - 10}px` : `${40}px`;
       carElement.style.top = `${top}px`;
       carElement.style.left = `${left}px`;
       carElement.style.backgroundColor = this.getCarColor(car.id);
 
-      // Add click handler directly to car
       carElement.addEventListener("click", (e) => {
-        console.log("Car clicked:", car);
         const rect = carElement.getBoundingClientRect();
         if (car.axis === "horizontal") {
-          console.log("Horizontal:", car);
           const clickX = e.clientX - rect.left;
           const direction = clickX < rect.width / 2 ? "left" : "right";
           this.moveCar(car, direction);
