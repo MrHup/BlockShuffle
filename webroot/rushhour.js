@@ -160,8 +160,6 @@ class RushHour {
           ? car.positions[0].col * cellSize + 2 * car.positions[0].col + 10
           : car.positions[0].col * cellSize + 3 * car.positions[0].col + 3;
 
-      console.log(left, top);
-
       carElement.style.width =
         car.axis === "horizontal" ? `${length - 10}px` : `${40}px`;
       carElement.style.height =
@@ -205,15 +203,6 @@ class RushHour {
   }
 }
 
-const initialGrid = [
-  [2, 1, 1, 1, 1, 0],
-  [2, 0, 0, 0, 0, 0],
-  [0, -1, -1, 0, 0, 4],
-  [5, 3, 3, 3, 3, 4],
-  [5, 0, 0, 0, 0, 0],
-  [5, 0, 0, 0, 0, 0],
-];
-
 class MenuManager {
   constructor() {
     this.menuContainer = document.getElementById("menu-container");
@@ -222,12 +211,44 @@ class MenuManager {
     this.leaderboardContainer = document.getElementById(
       "leaderboard-container"
     );
+    this.usernameLabel = document.querySelector("#username");
 
     this.initializeListeners();
 
-    // Initialize game immediately
-    window.gameInstance = new RushHour(initialGrid);
-    window.gameInstance.render();
+    window.addEventListener("message", (ev) => {
+      const { type, data } = ev.data;
+      if (type === "devvit-message") {
+        const { message } = data;
+
+        if (message.type === "initialData") {
+          const { username, gridData } = message.data;
+          this.usernameLabel.innerText = username;
+
+          // Initialize game immediately
+          window.gameInstance = new RushHour(gridData);
+          window.gameInstance.render();
+        } else if (message.type === "leaderboardData") {
+          const leaderboardContent = document.getElementById(
+            "leaderboard-content"
+          );
+          const { leaderboard } = message.data;
+
+          // Create leaderboard HTML
+          const leaderboardHTML = leaderboard
+            .map(
+              (entry, index) => `
+            <div class="leaderboard-entry">
+              <span>#${index + 1} ${entry.member}</span>
+              <span>${entry.score} moves</span>
+            </div>
+          `
+            )
+            .join("");
+
+          leaderboardContent.innerHTML = leaderboardHTML;
+        }
+      }
+    });
   }
 
   initializeListeners() {
@@ -305,9 +326,6 @@ class MenuManager {
   }
 }
 
-// Initialize menu system
-const menuManager = new MenuManager();
-
 class GridCreator {
   constructor() {
     this.grid = Array(6)
@@ -374,6 +392,13 @@ class GridCreator {
 
     document.getElementById("submit-grid").addEventListener("click", () => {
       console.log("Created grid:", this.grid);
+      window.parent.postMessage(
+        {
+          type: "submitGrid",
+          data: { grid: this.grid },
+        },
+        "*"
+      );
     });
   }
 
@@ -477,3 +502,6 @@ class GridCreator {
     });
   }
 }
+
+// Initialize menu system
+const menuManager = new MenuManager();

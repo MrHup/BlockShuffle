@@ -51,6 +51,27 @@ const App: Devvit.CustomPostComponent = ({ redis, postId, ui, reddit }) => {
     }
   };
 
+  // Given a matrix, save it under the given key
+  const saveMatrix = async (matrix: any, key: string) => {
+    await redis.set(key, JSON.stringify(matrix));
+  };
+
+  // Default grid
+  const defaultMatrix = [
+    [2, 1, 1, 1, 1, 0],
+    [2, 0, 0, 0, 0, 0],
+    [0, -1, -1, 0, 0, 4],
+    [5, 3, 3, 3, 3, 4],
+    [5, 0, 0, 0, 0, 0],
+    [5, 0, 0, 0, 0, 0],
+  ];
+
+  // Given a key, return the saved matrix or default one if not found
+  const getMatrix = async (key: string) => {
+    const matrix = await redis.get(key);
+    return matrix ? JSON.parse(matrix) : defaultMatrix;
+  };
+
 return (
   <vstack grow padding="small">
       <vstack grow height="100%">
@@ -65,7 +86,6 @@ return (
                   } else if (msg.type === 'saveScore') {
                       await addScore(msg.data);
                   } else if (msg.type === 'getLeaderboard') {
-                      console.log('Received leaderboard request');
                       console.log('Leaderboard:', leaderboard);
                       ui.webView.postMessage('myWebView', {
                           type: 'leaderboardData',
@@ -78,8 +98,29 @@ return (
                       type: 'initialData',
                       data: {
                         username: username,
+                        gridData: await getMatrix('grid:' + postId),
                       },
                     });
+                  } else if (msg.type == 'submitGrid')
+                  {
+                    const gridData = msg.data.grid;
+                    const subreddit = await reddit.getCurrentSubreddit();
+                    const post = await reddit.submitPost({
+                      title: 'Can you move the red car to the exit?',
+                      subredditName: subreddit.name,
+                    
+                      preview: (
+                        <vstack height="100%" width="100%" alignment="middle center">
+                          <text size="large">Loading...</text>
+                        </vstack>
+                      ),
+                      
+                    });
+                    await saveMatrix(gridData, `grid:${post.id}`);
+
+                    ui.showToast({ text: 'Created post!' });
+                    ui.navigateTo(post);
+
                   }
               }}
           />
@@ -89,9 +130,33 @@ return (
 };
 
 Devvit.addCustomPostType({
-  name: 'Progress bar backed by Redis',
+  name: 'Can you move the red car to the exit?',
   render: App,
   height: 'tall'
 });
+
+
+Devvit.addMenuItem({
+  label: 'Create new test post',
+  location: 'subreddit',
+  onPress: async (_event, context) => {
+    const { reddit, ui } = context;
+    const subreddit = await reddit.getCurrentSubreddit();
+    const post = await reddit.submitPost({
+      title: 'Can you move the red car to the exit?',
+      subredditName: subreddit.name,
+    
+      preview: (
+        <vstack height="100%" width="100%" alignment="middle center">
+          <text size="large">Loading ??</text>
+        </vstack>
+      ),
+      
+    });
+    ui.showToast({ text: 'Created post!' });
+    ui.navigateTo(post);
+  },
+});
+
 
 export default Devvit;
