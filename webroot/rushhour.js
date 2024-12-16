@@ -131,22 +131,72 @@ class RushHour {
   render() {
     const board = document.getElementById("board");
     board.innerHTML = "";
+    const cellSize = 50;
+
+    // Create grid for reference
     for (let row = 0; row < this.grid.length; row++) {
       const tr = document.createElement("tr");
       for (let col = 0; col < this.grid[row].length; col++) {
         const td = document.createElement("td");
-        td.className = `cell car-${this.grid[row][col]}`;
-        td.onclick = (e) => {
-          const rect = td.getBoundingClientRect();
-          const clickTop = e.clientY < rect.top + rect.height / 2;
-          this.handleClick(row, col, clickTop);
-        };
         tr.appendChild(td);
       }
       board.appendChild(tr);
     }
+
+    // Render cars
+    this.cars.forEach((car) => {
+      const carElement = document.createElement("div");
+      carElement.className = "car";
+      carElement.dataset.axis = car.axis;
+      carElement.dataset.id = car.id;
+
+      const length = car.positions.length * cellSize;
+      const top = car.positions[0].row * cellSize;
+      const left = car.positions[0].col * cellSize;
+
+      carElement.style.width =
+        car.axis === "horizontal" ? `${length}px` : `${40}px`;
+      carElement.style.height =
+        car.axis === "vertical" ? `${length}px` : `${40}px`;
+      carElement.style.top = `${top}px`;
+      carElement.style.left = `${left}px`;
+      carElement.style.backgroundColor = this.getCarColor(car.id);
+
+      // Add click handler directly to car
+      carElement.addEventListener("click", (e) => {
+        console.log("Car clicked:", car);
+        const rect = carElement.getBoundingClientRect();
+        if (car.axis === "horizontal") {
+          console.log("Horizontal:", car);
+          const clickX = e.clientX - rect.left;
+          const direction = clickX < rect.width / 2 ? "left" : "right";
+          this.moveCar(car, direction);
+          this.render();
+        } else {
+          const clickY = e.clientY - rect.top;
+          const direction = clickY < rect.height / 2 ? "up" : "down";
+          this.moveCar(car, direction);
+          this.render();
+        }
+      });
+
+      board.appendChild(carElement);
+    });
+
     const movesCounter = document.getElementById("moves");
     movesCounter.textContent = `Moves: ${this.moves}`;
+  }
+
+  getCarColor(id) {
+    const colors = {
+      1: "#ff9999",
+      2: "#99ff99",
+      3: "#9999ff",
+      4: "#ffff99",
+      5: "#ff99ff",
+      [-1]: "#ff0000", // Exit car
+    };
+    return colors[id] || "#gray";
   }
 }
 
