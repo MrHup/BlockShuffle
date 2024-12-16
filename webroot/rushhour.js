@@ -233,15 +233,21 @@ class MenuManager {
           );
           const { leaderboard } = message.data;
 
+          if (!leaderboard || leaderboard.length === 0) {
+            leaderboardContent.innerHTML =
+              '<div class="leaderboard-entry">No one beat this yet!</div>';
+            return;
+          }
+
           // Create leaderboard HTML
           const leaderboardHTML = leaderboard
             .map(
               (entry, index) => `
-            <div class="leaderboard-entry">
-              <span>#${index + 1} ${entry.member}</span>
-              <span>${entry.score} moves</span>
-            </div>
-          `
+              <div class="leaderboard-entry">
+                  <span>#${index + 1} ${entry.member}</span>
+                  <span>${entry.score} moves</span>
+              </div>
+              `
             )
             .join("");
 

@@ -265,3 +265,20 @@ td {
   color: white;
   cursor: pointer;
 }
+
+/* How to play */
+.howto-content {
+  margin: 20px 0;
+  line-height: 1.6;
+}
+
+.howto-content p {
+  margin: 10px 0;
+  color: var(--text-color);
+  font-size: 16px;
+}
+
+.howto-content p:first-child {
+  font-weight: bold;
+  color: var(--primary-color);
+}
