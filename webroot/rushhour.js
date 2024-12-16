@@ -210,6 +210,12 @@ class MenuManager {
   }
 
   showScreen(screen) {
+    // Remove any existing overlay
+    const existingOverlay = document.querySelector(".overlay");
+    if (existingOverlay) {
+      existingOverlay.remove();
+    }
+
     this.createContainer.classList.add("hidden");
     this.howtoContainer.classList.add("hidden");
     this.leaderboardContainer.classList.add("hidden");
@@ -218,16 +224,25 @@ class MenuManager {
       case "main":
         break;
       case "create":
+        this.createOverlay();
         this.createContainer.classList.remove("hidden");
         break;
       case "howto":
+        this.createOverlay();
         this.howtoContainer.classList.remove("hidden");
         break;
       case "leaderboard":
+        this.createOverlay();
         this.leaderboardContainer.classList.remove("hidden");
         this.showLeaderboard();
         break;
     }
+  }
+
+  createOverlay() {
+    const overlay = document.createElement("div");
+    overlay.className = "overlay";
+    document.body.appendChild(overlay);
   }
 }
 
