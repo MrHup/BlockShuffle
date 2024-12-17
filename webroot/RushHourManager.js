@@ -1,6 +1,7 @@
-class RushHour {
-  constructor(grid, gameId = crypto.randomUUID()) {
+export class RushHour {
+  constructor(grid, menuManager, gameId = crypto.randomUUID()) {
     this.gameId = gameId;
+    this.menuManager = menuManager;
     this.grid = grid;
     this.exitCarId = -1;
     this.cars = new Map();
@@ -140,7 +141,7 @@ class RushHour {
       const winningSolution = [...this.moveHistory];
       this.resetGame();
 
-      menuManager.showScreen("victory");
+      this.menuManager.showScreen("victory");
       window.lastWinningSolution = winningSolution;
     }
   }

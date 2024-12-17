@@ -1,4 +1,4 @@
-class GridCreator {
+export class GridCreator {
   constructor() {
     this.grid = Array(6)
       .fill()

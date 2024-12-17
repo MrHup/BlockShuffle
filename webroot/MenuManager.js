@@ -1,7 +1,7 @@
 import { GridCreator } from "./GridCreator.js";
-import { RushHour } from "./RushHour.js";
+import { RushHour } from "./RushHourManager.js";
 
-class MenuManager {
+export class MenuManager {
   constructor() {
     this.victoryContainer = document.getElementById("victory-container");
     this.menuContainer = document.getElementById("menu-container");
@@ -24,7 +24,7 @@ class MenuManager {
           this.usernameLabel.innerText = username;
 
           // Initialize game immediately
-          window.gameInstance = new RushHour(gridData);
+          window.gameInstance = new RushHour(gridData, this);
           window.gameInstance.render();
         } else if (message.type === "leaderboardData") {
           const leaderboardContent = document.getElementById(
