@@ -82,7 +82,7 @@ return (
               height="100%"
               onMessage={async (msg: any) => {
                   if (msg.type === 'showWinMessage') {
-                      ui.showToast(`You win! Total moves: ${msg.data.moves}`);
+                      ui.showToast(`You win with ${msg.data.moves} total moves! 🏆`);
                   } else if (msg.type === 'saveScore') {
                       await addScore(msg.data);
                   } else if (msg.type === 'getLeaderboard') {
@@ -101,12 +101,20 @@ return (
                         gridData: await getMatrix('grid:' + postId),
                       },
                     });
-                  } else if (msg.type == 'submitGrid')
+                  } else if (msg.type == 'submitComment')
+                    {
+                      await reddit.submitComment({
+                        id: postId!,
+                        text: "I've solved the puzzle by doing these moves >!" + msg.data.history +"!<",
+                      });
+                      ui.showToast(`Comment submitted ⭐`);
+                    } 
+                  else if (msg.type == 'submitGrid')
                   {
                     const gridData = msg.data.grid;
                     const subreddit = await reddit.getCurrentSubreddit();
                     const post = await reddit.submitPost({
-                      title: 'Can you move the red car to the exit?',
+                      title: 'Can you move the red block to the exit?',
                       subredditName: subreddit.name,
                     
                       preview: (
@@ -118,9 +126,8 @@ return (
                     });
                     await saveMatrix(gridData, `grid:${post.id}`);
 
-                    ui.showToast({ text: 'Created post!' });
+                    ui.showToast({ text: 'Created post! 🚀' });
                     ui.navigateTo(post);
-
                   }
               }}
           />
@@ -143,7 +150,7 @@ Devvit.addMenuItem({
     const { reddit, ui } = context;
     const subreddit = await reddit.getCurrentSubreddit();
     const post = await reddit.submitPost({
-      title: 'Can you move the red car to the exit?',
+      title: 'Can you move the red block to the exit?',
       subredditName: subreddit.name,
     
       preview: (
@@ -153,7 +160,7 @@ Devvit.addMenuItem({
       ),
       
     });
-    ui.showToast({ text: 'Created post!' });
+    ui.showToast({ text: 'Created post! 🚀' });
     ui.navigateTo(post);
   },
 });

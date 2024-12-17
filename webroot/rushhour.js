@@ -5,6 +5,7 @@ class RushHour {
     this.exitCarId = -1;
     this.cars = new Map();
     this.moves = 0;
+    this.moveHistory = [];
     this.exitCarId = -1;
     this.backupGrid = JSON.parse(JSON.stringify(grid));
     this.initializeCars();
@@ -39,6 +40,7 @@ class RushHour {
     this.grid = JSON.parse(JSON.stringify(this.backupGrid));
     this.cars = new Map();
     this.moves = 0;
+    this.moveHistory = [];
     this.initializeCars();
     this.render();
   }
@@ -89,6 +91,19 @@ class RushHour {
 
   moveCar(car, direction) {
     if (!this.canMove(car, direction)) return;
+
+    // Record the move
+    const clickedPosition =
+      direction === "right" || direction === "down"
+        ? car.positions[0] // First position for right/down moves
+        : car.positions[car.positions.length - 1]; // Last position for left/up moves
+
+    this.moveHistory.push({
+      carId: car.id,
+      from: clickedPosition,
+      direction: direction,
+    });
+
     // Clear old positions
     for (const pos of car.positions) {
       this.grid[pos.row][pos.col] = 0;
@@ -107,10 +122,14 @@ class RushHour {
     this.moves++;
     // Check if game is won
     if (car.id === this.exitCarId && car.positions.some((p) => p.col === 5)) {
+      const currentScore = this.moves;
+      document.getElementById("current-score").textContent = currentScore;
+
       this.saveScore(
         document.getElementById("username").textContent,
         this.moves
       );
+
       window.parent.postMessage(
         {
           type: "showWinMessage",
@@ -118,17 +137,11 @@ class RushHour {
         },
         "*"
       );
+      const winningSolution = [...this.moveHistory];
+      this.resetGame();
 
-      // Reset the game
-      this.grid = JSON.parse(JSON.stringify(this.backupGrid));
-      console.log("Game reset", this.grid);
-      this.cars = new Map();
-      this.moves = 0;
-      this.initializeCars();
-      this.render();
-
-      // Show leaderboard
-      menuManager.showScreen("leaderboard");
+      menuManager.showScreen("victory");
+      window.lastWinningSolution = winningSolution;
     }
   }
 
@@ -239,6 +252,7 @@ class RushHour {
 
 class MenuManager {
   constructor() {
+    this.victoryContainer = document.getElementById("victory-container");
     this.menuContainer = document.getElementById("menu-container");
     this.createContainer = document.getElementById("create-container");
     this.howtoContainer = document.getElementById("howto-container");
@@ -291,6 +305,12 @@ class MenuManager {
     });
   }
 
+  formatMoveHistory(moveHistory) {
+    return moveHistory
+      .map((move) => `(${move.from.row},${move.from.col})`)
+      .join(", ");
+  }
+
   initializeListeners() {
     document
       .getElementById("create-button")
@@ -310,6 +330,24 @@ class MenuManager {
     document
       .getElementById("back-from-leaderboard")
       .addEventListener("click", () => this.showScreen("main"));
+    document
+      .getElementById("back-from-victory")
+      .addEventListener("click", () => this.showScreen("main"));
+    document.getElementById("post-solution").addEventListener("click", () => {
+      if (window.lastWinningSolution) {
+        const formattedMoves = this.formatMoveHistory(
+          window.lastWinningSolution
+        );
+        console.log("Solution positions:", formattedMoves);
+        window.parent.postMessage(
+          {
+            type: "submitComment",
+            data: { history: formattedMoves },
+          },
+          "*"
+        );
+      }
+    });
   }
 
   async showLeaderboard() {
@@ -335,6 +373,7 @@ class MenuManager {
     this.createContainer.classList.add("hidden");
     this.howtoContainer.classList.add("hidden");
     this.leaderboardContainer.classList.add("hidden");
+    this.victoryContainer.classList.add("hidden");
 
     switch (screen) {
       case "main":
@@ -355,6 +394,10 @@ class MenuManager {
         this.createOverlay();
         this.leaderboardContainer.classList.remove("hidden");
         this.showLeaderboard();
+        break;
+      case "victory":
+        this.createOverlay();
+        this.victoryContainer.classList.remove("hidden");
         break;
     }
   }
