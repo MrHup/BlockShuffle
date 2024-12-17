@@ -208,6 +208,17 @@ class RushHour {
       3: "#9999ff",
       4: "#ffff99",
       5: "#ff99ff",
+      6: "#99ffff",
+      7: "#ffcc99",
+      8: "#cc99ff",
+      9: "#ffccff",
+      10: "#ccffcc",
+      11: "#ff99cc",
+      12: "#ccff99",
+      13: "#99ccff",
+      14: "#ffcc99",
+      15: "#9999ff",
+      16: "#ff9999",
       [-1]: "#ff0000", // Exit car
     };
     return colors[id] || "#gray";
