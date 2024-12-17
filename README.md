@@ -27,9 +27,9 @@ Block Shuffle lets players solve and create sliding block puzzles right in their
 
 ## 🎯 How to Play
 
-1. Click cars to move them left/right or up/down;
-2. Clear the path for the red car;
-3. Get the red car to the exit on the right;
+1. Click blocks to move them left/right or up/down;
+2. Clear the path for the red block;
+3. Get the red block to the exit on the right;
 4. Try to solve it in as few moves as possible!
 
 ## 🛠️ Technical Details
