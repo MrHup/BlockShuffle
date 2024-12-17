@@ -8,6 +8,10 @@ class RushHour {
     this.exitCarId = -1;
     this.backupGrid = JSON.parse(JSON.stringify(grid));
     this.initializeCars();
+
+    document.getElementById("reset-button").addEventListener("click", () => {
+      this.resetGame();
+    });
   }
 
   async saveScore(username, moves) {
@@ -29,6 +33,14 @@ class RushHour {
       },
       "*"
     );
+  }
+
+  resetGame() {
+    this.grid = JSON.parse(JSON.stringify(this.backupGrid));
+    this.cars = new Map();
+    this.moves = 0;
+    this.initializeCars();
+    this.render();
   }
 
   initializeCars() {

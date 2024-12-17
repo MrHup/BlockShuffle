@@ -7,10 +7,6 @@
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-@keyframes stripe-slide {
-  0% { background-position: 0 0; }
-  100% { background-position: 100% 100%; }
-}
 
 body {
   display: flex;
@@ -18,14 +14,9 @@ body {
   justify-content: space-between;
   min-height: 100vh;
   margin: 0;
-  background: repeating-linear-gradient(
-    45deg,
-    #7aceff,
-    #7aceff 60px,
-    #4ebeff 60px,
-    #4ebeff 120px
-  );
-  background-size: 200% 200%;
+  background-color: #fdfdff;
+  background-image: radial-gradient(#c9e2ff 2px, #fdfdff 2px);
+  background-size: 40px 40px;
   animation: stripe-slide 4s linear infinite;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   overflow: hidden;
@@ -56,6 +47,19 @@ h1 {
 #username {
   color: var(--accent-color);
   font-weight: bold;
+}
+
+.reset-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0 8px;
+  transition: transform 0.2s;
+}
+
+.reset-button:hover {
+  transform: rotate(180deg);
 }
 
 table {
